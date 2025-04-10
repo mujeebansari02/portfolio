@@ -308,19 +308,48 @@ body {
 }
 
 .contact-item {
-    display: inline-flex;
+    display: flex;
     align-items: center;
     gap: 0.75rem;
     padding: 0.8rem 1.5rem;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-radius: 50px;
-    background: rgba(37, 99, 235, 0.15);
-    backdrop-filter: blur(5px);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    text-decoration: none;
     transition: all 0.3s ease;
-    animation: fadeInScale 0.5s ease forwards;
-    opacity: 0;
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
+}
+
+.contact-item i {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    transition: all 0.3s ease;
+}
+
+.contact-item span {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.contact-item:hover {
+    transform: translateY(-2px);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
+    color: white;
+}
+
+.contact-item:hover span {
+    color: white;
+}
+
+.contact-item:hover i {
+    color: white;
+    transform: scale(1.1);
 }
 
 .contact-item::before {
@@ -343,35 +372,34 @@ body {
     left: 100%;
 }
 
-.contact-item:hover {
-    transform: translateY(-3px);
-    border-color: rgba(255, 255, 255, 0.8);
-    background: rgba(37, 99, 235, 0.25);
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
-}
-
-.contact-item i {
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 1.25rem;
-    filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.4));
-    transition: all 0.3s ease;
-}
-
-.contact-item:hover i {
+.contact-item.resume-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
-    transform: scale(1.1) rotate(5deg);
 }
 
-.contact-item a {
-    color: rgba(255, 255, 255, 0.9);
-    text-decoration: none;
-    font-weight: 600;
-    transition: all 0.3s ease;
+.contact-item.resume-btn i {
+    color: var(--primary-color);
 }
 
-.contact-item:hover a {
+.contact-item.resume-btn:hover {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.contact-item.resume-btn:hover i {
     color: white;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+@media (max-width: 768px) {
+    .contact-item {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .contact-item i {
+        font-size: 1.1rem;
+    }
 }
 
 /* Experience Section */
@@ -956,16 +984,13 @@ body {
     }
 
     .contact-info {
-        gap: 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
     }
     
     .contact-item {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-    }
-    
-    .contact-item i {
-        font-size: 1.1rem;
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -1376,50 +1401,22 @@ a:hover {
 .contact-item:nth-child(4) { animation-delay: 2.2s; }
 
 .resume-btn {
-    background: rgba(37, 99, 235, 0.25);
-    border-color: rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-}
-
-.resume-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.2),
-        transparent
-    );
-    transition: 0.5s;
-}
-
-.resume-btn:hover::before {
-    left: 100%;
-}
-
-.resume-btn i {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     color: white;
 }
 
-.resume-btn a {
-    font-weight: 600;
+.resume-btn i {
+    color: var(--primary-color);
 }
 
 .resume-btn:hover {
-    background: rgba(37, 99, 235, 0.35);
-    border-color: rgba(255, 255, 255, 0.9);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    background: var(--primary-color);
+    border-color: var(--primary-color);
 }
 
 .resume-btn:hover i {
     color: white;
-    transform: scale(1.1) rotate(5deg);
 }
 
 .contact-item:nth-child(5) { 
