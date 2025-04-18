@@ -1,374 +1,355 @@
-// Mobile Menu Toggle
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
-const navLinksItems = document.querySelectorAll('.nav-links a');
-
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
-    hamburger.classList.toggle('active');
-});
-
-// Close mobile menu when clicking a link
-navLinksItems.forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        hamburger.classList.remove('active');
-    });
-});
-
-// Smooth scroll for navigation links
+// Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+    anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
             target.scrollIntoView({
-                behavior: 'smooth'
+                behavior: 'smooth',
+                block: 'start'
             });
-            // Close mobile menu if open
-            if (navLinks.classList.contains('active')) {
-                navLinks.classList.remove('active');
-            }
         }
     });
 });
 
-// Navbar background change on scroll
+// Navbar scroll effect
 const navbar = document.querySelector('.navbar');
+let lastScroll = 0;
+let scrollTimeout;
+
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-    }
-});
-
-// Form validation
-const contactForm = document.getElementById('contact-form');
-const nameInput = document.getElementById('name');
-const emailInput = document.getElementById('email');
-const subjectInput = document.getElementById('subject');
-const messageInput = document.getElementById('message');
-
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+    const currentScroll = window.pageYOffset;
     
-    // Reset errors
-    clearErrors();
+    // Clear any existing timeout
+    clearTimeout(scrollTimeout);
     
-    // Validate inputs
-    let isValid = true;
-    
-    if (!nameInput.value.trim()) {
-        showError(nameInput, 'Name is required');
-        isValid = false;
+    if (currentScroll <= 0) {
+        navbar.classList.remove('scroll-up');
+        navbar.classList.remove('scroll-down');
+        return;
     }
     
-    if (!emailInput.value.trim()) {
-        showError(emailInput, 'Email is required');
-        isValid = false;
-    } else if (!isValidEmail(emailInput.value)) {
-        showError(emailInput, 'Please enter a valid email');
-        isValid = false;
-    }
-    
-    if (!subjectInput.value.trim()) {
-        showError(subjectInput, 'Subject is required');
-        isValid = false;
-    }
-    
-    if (!messageInput.value.trim()) {
-        showError(messageInput, 'Message is required');
-        isValid = false;
-    }
-    
-    if (isValid) {
-        // Here you would typically send the form data to a server
-        alert('Thank you for your message! I will get back to you soon.');
-        contactForm.reset();
-    }
-});
-
-function showError(input, message) {
-    const formGroup = input.parentElement;
-    const error = document.createElement('small');
-    error.className = 'error-message';
-    error.style.color = '#dc2626';
-    error.style.display = 'block';
-    error.style.marginTop = '0.5rem';
-    error.textContent = message;
-    formGroup.appendChild(error);
-    input.style.borderColor = '#dc2626';
-}
-
-function clearErrors() {
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(error => error.remove());
-    const inputs = contactForm.querySelectorAll('input, textarea');
-    inputs.forEach(input => input.style.borderColor = '#e5e7eb');
-}
-
-function isValidEmail(email) {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-}
-
-// Animate skill items when they come into view
-const skillItems = document.querySelectorAll('.skill-item');
-const animateSkillItems = () => {
-    skillItems.forEach(item => {
-        const rect = item.getBoundingClientRect();
-        const isInView = (rect.top >= 0 && rect.bottom <= window.innerHeight);
-        
-        if (isInView) {
-            item.classList.add('reveal');
+    // Add a small delay to prevent rapid class toggling
+    scrollTimeout = setTimeout(() => {
+        if (currentScroll > lastScroll && !navbar.classList.contains('scroll-down')) {
+            navbar.classList.remove('scroll-up');
+            navbar.classList.add('scroll-down');
+        } else if (currentScroll < lastScroll && navbar.classList.contains('scroll-down')) {
+            navbar.classList.remove('scroll-down');
+            navbar.classList.add('scroll-up');
         }
-    });
-};
+        lastScroll = currentScroll;
+    }, 50);
+});
 
-// Initial check for elements in view
-animateSkillItems();
-
-// Check on scroll
-window.addEventListener('scroll', animateSkillItems);
-
-// Intersection Observer for animated elements
-const animatedElements = document.querySelectorAll('.timeline-item, .project-card, .certificate-card, .education-item, .skill-category, section');
-
+// Intersection Observer for animations
 const observerOptions = {
     root: null,
-    threshold: 0.1,
-    rootMargin: '0px'
+    rootMargin: '0px',
+    threshold: 0.1
 };
 
-const observer = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            if (entry.target.tagName.toLowerCase() === 'section') {
-                entry.target.classList.add('fade-in');
-            } else {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
+            entry.target.classList.add('animate');
             observer.unobserve(entry.target);
         }
     });
 }, observerOptions);
 
-// Observe all animated elements
-animatedElements.forEach(element => {
-    if (element.tagName.toLowerCase() === 'section') {
-        element.classList.add('fade-out');
-    } else {
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-    }
-    observer.observe(element);
+// Observe elements for animations
+document.querySelectorAll('.skill-item, .profile-info, .contact-form').forEach(el => {
+    observer.observe(el);
 });
 
-// Animate skill bars on scroll
-const skillBars = document.querySelectorAll('.progress');
-const animateSkills = () => {
-    skillBars.forEach(bar => {
-        const rect = bar.getBoundingClientRect();
-        if (rect.top < window.innerHeight && rect.bottom > 0) {
-            bar.style.width = bar.parentElement.getAttribute('data-progress') || '0%';
+// Form submission handling
+const contactForm = document.querySelector('.contact-form form');
+if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const formData = new FormData(contactForm);
+        const submitBtn = contactForm.querySelector('.submit-btn');
+        
+        try {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            // Simulate form submission (replace with actual API call)
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Sent!';
+            contactForm.reset();
+            
+            setTimeout(() => {
+                submitBtn.innerHTML = 'Send Message';
+                submitBtn.disabled = false;
+            }, 3000);
+            
+        } catch (error) {
+            submitBtn.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error';
+            setTimeout(() => {
+                submitBtn.innerHTML = 'Send Message';
+                submitBtn.disabled = false;
+            }, 3000);
         }
     });
-};
+}
 
-window.addEventListener('scroll', animateSkills);
-window.addEventListener('load', animateSkills);
+// Add hover effect to skill icons
+document.querySelectorAll('.skill-icon').forEach(icon => {
+    icon.addEventListener('mouseenter', () => {
+        icon.style.transform = 'scale(1.2) rotate(5deg)';
+    });
+    
+    icon.addEventListener('mouseleave', () => {
+        icon.style.transform = 'scale(1) rotate(0)';
+    });
+});
 
-// Add CSS for fade animations
+// Add parallax effect to profile image
+const profileImage = document.querySelector('.profile-image');
+if (profileImage) {
+    window.addEventListener('mousemove', (e) => {
+        const { clientX, clientY } = e;
+        const { left, top, width, height } = profileImage.getBoundingClientRect();
+        
+        const x = (clientX - left - width / 2) / 20;
+        const y = (clientY - top - height / 2) / 20;
+        
+        profileImage.style.transform = `perspective(1000px) rotateX(${-y}deg) rotateY(${x}deg)`;
+    });
+    
+    window.addEventListener('mouseleave', () => {
+        profileImage.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+    });
+}
+
+// Role Tags Animation
+const roleTags = document.querySelectorAll('.role span');
+roleTags.forEach((tag, index) => {
+    tag.style.animationDelay = `${index * 0.1}s`;
+});
+
+// Profile Image Hover Effect
+const profileImageHover = document.querySelector('.profile-image');
+if (profileImageHover) {
+    profileImageHover.addEventListener('mouseenter', () => {
+        profileImageHover.style.transform = 'scale(1.05)';
+        profileImageHover.style.boxShadow = '0 0 30px rgba(0, 242, 255, 0.4)';
+    });
+    
+    profileImageHover.addEventListener('mouseleave', () => {
+        profileImageHover.style.transform = 'scale(1)';
+        profileImageHover.style.boxShadow = '0 8px 24px rgba(0, 242, 255, 0.2)';
+    });
+}
+
+// Mobile Menu Toggle
+const menuButton = document.querySelector('.hamburger');
+const menuLinks = document.querySelector('.nav-links');
+
+if (menuButton && menuLinks) {
+    menuButton.addEventListener('click', () => {
+        menuButton.classList.toggle('active');
+        menuLinks.classList.toggle('active');
+        document.body.style.overflow = menuLinks.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (menuLinks.classList.contains('active') && 
+            !menuButton.contains(e.target) && 
+            !menuLinks.contains(e.target)) {
+            menuButton.classList.remove('active');
+            menuLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Close menu when clicking a link
+    menuLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+            menuButton.classList.remove('active');
+            menuLinks.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+    });
+}
+
+// Add active class to current page in navigation
+const currentPage = window.location.pathname.split('/').pop();
+const navigationLinks = document.querySelectorAll('.nav-links a');
+
+navigationLinks.forEach(link => {
+    const linkPage = link.getAttribute('href');
+    if (linkPage === currentPage) {
+        link.classList.add('active');
+    } else {
+        link.classList.remove('active');
+    }
+});
+
+// Add hover effect to navigation links
+navigationLinks.forEach(link => {
+    link.addEventListener('mouseenter', () => {
+        link.style.transform = 'translateY(-2px)';
+    });
+    
+    link.addEventListener('mouseleave', () => {
+        if (!link.classList.contains('active')) {
+            link.style.transform = 'translateY(0)';
+        }
+    });
+});
+
+// Add CSS for mobile menu
 const style = document.createElement('style');
 style.textContent = `
-    .fade-out {
-        opacity: 0;
-        transform: translateY(20px);
-        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        padding: 5px;
     }
     
-    .fade-in {
-        opacity: 1;
-        transform: translateY(0);
+    .hamburger span {
+        width: 25px;
+        height: 3px;
+        background: var(--accent-primary);
+        border-radius: 3px;
+        transition: 0.3s;
+    }
+    
+    .hamburger.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .hamburger.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+    
+    @media (max-width: 768px) {
+        .hamburger {
+            display: flex;
+        }
+        
+        .nav-links {
+            position: fixed;
+            top: 80px;
+            left: -100%;
+            width: 100%;
+            height: calc(100vh - 80px);
+            background: var(--bg-primary);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.3s;
+            z-index: 999;
+        }
+        
+        .nav-links.active {
+            left: 0;
+        }
     }
 `;
+
 document.head.appendChild(style);
 
-// Reveal sections on scroll
-const revealSections = document.querySelectorAll('section');
-const revealOptions = {
-    threshold: 0.15,
-    rootMargin: '0px'
-};
+// Certificates Section Animations
+const certificateCards = document.querySelectorAll('.certificate-card');
 
-const sectionObserver = new IntersectionObserver((entries) => {
+// Add scroll reveal animation
+const certificateObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            entry.target.classList.add('section-reveal', 'active');
-            sectionObserver.unobserve(entry.target);
+            entry.target.style.animationPlayState = 'running';
         }
     });
-}, revealOptions);
-
-revealSections.forEach(section => {
-    section.classList.add('section-reveal');
-    sectionObserver.observe(section);
+}, {
+    threshold: 0.1
 });
 
-// Enhanced hover effects for project cards
-const projectCards = document.querySelectorAll('.project-card');
-projectCards.forEach(card => {
-    card.style.transform = 'none';
-    card.style.transition = 'none';
-});
-
-// Add smooth reveal for timeline items
-const timelineItems = document.querySelectorAll('.timeline-item');
-const timelineOptions = {
-    threshold: 0.2,
-    rootMargin: '0px'
-};
-
-const timelineObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateX(0)';
-            timelineObserver.unobserve(entry.target);
-        }
-    });
-}, timelineOptions);
-
-timelineItems.forEach(item => {
-    timelineObserver.observe(item);
-});
-
-// Add particle effect to hero section
-const heroSection = document.querySelector('.hero-about');
-const createParticle = () => {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.left = Math.random() * 100 + 'vw';
-    particle.style.animationDuration = Math.random() * 3 + 2 + 's';
-    particle.style.opacity = Math.random();
-    heroSection.appendChild(particle);
+certificateCards.forEach(card => {
+    certificateObserver.observe(card);
     
-    setTimeout(() => {
-        particle.remove();
-    }, 5000);
-};
-
-setInterval(createParticle, 200);
-
-// Add CSS for particles
-const particleStyles = document.createElement('style');
-particleStyles.textContent = `
-    .particle {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 50%;
-        pointer-events: none;
-        animation: particleFall linear forwards;
-    }
-
-    @keyframes particleFall {
-        0% {
-            transform: translateY(-10vh) scale(0);
-        }
-        100% {
-            transform: translateY(100vh) scale(1);
-        }
-    }
-`;
-document.head.appendChild(particleStyles);
-
-// Scroll reveal animation
-function reveal() {
-    const reveals = document.querySelectorAll('.timeline-item, .skill-item, .certificate-card, .contact-form');
-    
-    reveals.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
+    // Add mouse move effect
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
         
-        if (elementTop < windowHeight - 100) {
-            element.classList.add('animate');
-        }
-    });
-}
-
-// Initialize animations
-window.addEventListener('scroll', reveal);
-window.addEventListener('load', reveal);
-
-// Form submission animation
-const form = document.querySelector('.contact-form');
-if (form) {
-    form.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const submitBtn = this.querySelector('.submit-btn');
-        submitBtn.style.transform = 'scale(0.95)';
-        setTimeout(() => {
-            submitBtn.style.transform = '';
-            // Add your form submission logic here
-        }, 200);
-    });
-}
-
-// Skill icons hover effect
-const skillItemsHover = document.querySelectorAll('.skill-item');
-skillItemsHover.forEach(item => {
-    item.addEventListener('mouseenter', function() {
-        const icon = this.querySelector('.skill-icon');
-        if (icon) {
-            icon.style.transform = 'scale(1.1) rotate(5deg)';
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.02)`;
+        
+        // Add parallax effect to image
+        const image = card.querySelector('.certificate-image img');
+        if (image) {
+            const moveX = (centerX - x) / 20;
+            const moveY = (centerY - y) / 20;
+            image.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
         }
     });
     
-    item.addEventListener('mouseleave', function() {
-        const icon = this.querySelector('.skill-icon');
-        if (icon) {
-            icon.style.transform = '';
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(-10px) scale(1.02)';
+        const image = card.querySelector('.certificate-image img');
+        if (image) {
+            image.style.transform = 'scale(1.1)';
         }
     });
+    
+    // Add click effect for certificate links
+    const link = card.querySelector('.certificate-link');
+    if (link) {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            link.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                link.style.transform = 'translateY(-3px)';
+                // Add your link handling logic here
+                window.open(link.href, '_blank');
+            }, 150);
+        });
+    }
 });
 
-// Function to update active navigation link based on scroll position
-function updateActiveNavLink() {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-links a');
+// Add typing effect for certificate titles
+const certificateTitles = document.querySelectorAll('.certificate-content h3');
+certificateTitles.forEach(title => {
+    const text = title.textContent;
+    title.textContent = '';
     
-    let currentSection = '';
-    
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 100; // Offset for better trigger point
-        const sectionHeight = section.clientHeight;
-        const scrollPosition = window.scrollY;
-        
-        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-            currentSection = section.getAttribute('id');
+    let i = 0;
+    const typeWriter = () => {
+        if (i < text.length) {
+            title.textContent += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 50);
         }
+    };
+    
+    const titleObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                typeWriter();
+                titleObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.5
     });
     
-    navLinks.forEach(link => {
-        link.classList.remove('active');
-        if (link.getAttribute('href') === `#${currentSection}`) {
-            link.classList.add('active');
-        }
-    });
-}
-
-// Add scroll event listener
-window.addEventListener('scroll', updateActiveNavLink);
-window.addEventListener('load', updateActiveNavLink);
-
-// Update active state when clicking navigation links
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', function() {
-        document.querySelectorAll('.nav-links a').forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
-    });
+    titleObserver.observe(title);
 }); 
