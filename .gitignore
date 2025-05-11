@@ -3,7 +3,7 @@
 Thumbs.db
 desktop.ini
 
-# IDE files
+# IDE/Editor folders
 .vscode/
 .idea/
 *.sublime-project
@@ -15,7 +15,7 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 
-# Build files
+# Build output
 dist/
 build/
 *.log

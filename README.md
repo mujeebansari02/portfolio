@@ -1,27 +1,26 @@
-# Muhammed Mujeeb Ansari - Portfolio
+# Personal Portfolio Website
 
-A modern, responsive portfolio website showcasing my skills, experience, and projects as a Data Analyst, Web Developer, Software Engineer, and Software Tester.
+A modern, responsive portfolio website showcasing my skills, projects, and professional experience.
 
 ## 🚀 Features
 
 - Responsive design that works on all devices
 - Modern and clean UI with smooth animations
-- Dark theme with accent colors
-- Interactive sections for skills, experience, projects, and more
-- Contact form for easy communication
-- Mobile-friendly navigation
-- Optimized performance
+- Interactive sections for skills, projects, and experience
+- Contact form with Formspree integration
+- SEO optimized
+- Fast loading with optimized assets
 
 ## 🛠️ Technologies Used
 
 - HTML5
-- CSS3 (with CSS Variables and Flexbox/Grid)
-- JavaScript (ES6+)
+- CSS3
+- JavaScript
 - Font Awesome Icons
 - Google Fonts
-- Formspree for contact form
+- Formspree for form handling
 
-## 📱 Sections
+## 📋 Sections
 
 - Home/About
 - Skills
@@ -31,15 +30,6 @@ A modern, responsive portfolio website showcasing my skills, experience, and pro
 - Education
 - Contact
 
-## 🎨 Design Features
-
-- Smooth scrolling
-- Intersection Observer animations
-- Parallax effects
-- Hover animations
-- Mobile-first approach
-- Touch-friendly interactions
-
 ## 🔧 Setup and Installation
 
 1. Clone the repository:
@@ -47,25 +37,20 @@ A modern, responsive portfolio website showcasing my skills, experience, and pro
 git clone https://github.com/mujeebansari02/portfolio.git
 ```
 
-2. Navigate to the project directory:
-```bash
-cd portfolio
-```
+2. Open `index.html` in your browser to view the website locally.
 
-3. Open `index.html` in your browser or use a local server.
-
-## 📄 License
+## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👤 Contact
+## 👤 Author
 
-- Email: mujeebansari02@gmail.com
-- LinkedIn: [mujeebansari02](https://linkedin.com/in/mujeebansari02)
-- GitHub: [mujeebansari02](https://github.com/mujeebansari02)
+**Muhammed Mujeeb Ansari**
+- GitHub: [@mujeebansari02](https://github.com/mujeebansari02)
+- LinkedIn: [Muhammed Mujeeb Ansari](https://linkedin.com/in/mujeebansari02)
 
 ## 🙏 Acknowledgments
 
-- Font Awesome for icons
-- Google Fonts for typography
-- Formspree for form handling 
+- Font Awesome for the icons
+- Google Fonts for the typography
+- Formspree for the contact form functionality 
